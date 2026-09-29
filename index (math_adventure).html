@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MathAdventure – Grade 1 Math</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ===== THEME TOKENS (edit colors here) ===== */
+:root{--bg:#fff8ec;--card:#fff;--text:#3b3355;--muted:#7b7396;--line:#f1e4cf;--pink:#ff8fa3;--blue:#74c0fc;--green:#69db7c;--sun:#ffd43b;--lilac:#b197fc;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2a2745;--card:#38345c;--text:#f6f3ff;--muted:#bfb8e0;--line:#4a4573}}
+:root[data-theme="dark"]{--bg:#2a2745;--card:#38345c;--text:#f6f3ff;--muted:#bfb8e0;--line:#4a4573}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Fredoka,"Comic Sans MS",system-ui,sans-serif;font-size:1.15rem}
+button{font:inherit;cursor:pointer}
+h1,h2{margin:.2em 0}
+/* ===== HEADER / NAV ===== */
+header{background:var(--card);border-bottom:3px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.top{display:flex;justify-content:space-between;align-items:center;padding:8px 16px;max-width:980px;margin:auto}
+.logo{font-size:1.5rem;cursor:pointer}
+#menuBtn{display:none;border:0;background:var(--sun);border-radius:12px;font-size:1.6rem;padding:2px 12px;color:#333}
+nav{display:flex;gap:8px;justify-content:center;padding:0 12px 10px;flex-wrap:wrap}
+nav button{border:0;background:var(--bg);color:var(--text);border-radius:99px;padding:8px 16px;font-weight:600}
+nav button:hover,nav button.on{background:var(--lilac);color:#fff}
+@media(max-width:700px){#menuBtn{display:block}nav{display:none;flex-direction:column}nav.open{display:flex}nav button{font-size:1.2rem;padding:12px}}
+/* ===== LAYOUT / CARDS ===== */
+main{max-width:980px;margin:auto;padding:16px}
+.card{background:var(--card);border:3px solid var(--line);border-radius:28px;padding:20px;margin:14px 0;box-shadow:0 8px 20px rgba(120,100,180,.12);text-align:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
+.tile{--c:var(--blue);border:0;border-radius:26px;background:var(--c);color:#fff;padding:18px 10px;font-weight:600;font-size:1.2rem;box-shadow:0 6px 0 rgba(0,0,0,.15);transition:transform .15s;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.tile:hover:not(:disabled){transform:translateY(-4px) rotate(-1deg)}
+.tile span{display:block;font-size:3rem}.tile small{display:block;font-weight:400;font-size:.9rem}
+.tile:disabled{background:#c9c5d8;cursor:not-allowed}
+.btn{border:0;border-radius:99px;background:var(--green);color:#1c4a26;font-weight:600;font-size:1.3rem;padding:14px 30px;margin:6px;box-shadow:0 5px 0 rgba(0,0,0,.15);transition:transform .15s}
+.btn:hover{transform:scale(1.06)}.btn.alt{background:var(--sun);color:#5c4700}
+.row{display:flex;justify-content:center;flex-wrap:wrap}
+/* ===== HOME ===== */
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center}
+.hero h1{font-size:2.8rem;color:var(--lilac)}.sub{font-size:1.5rem;font-weight:600;margin:0 0 8px}
+.hero input{display:block;margin:12px 0;padding:12px 16px;font:inherit;border:3px solid var(--line);border-radius:18px;width:100%;max-width:300px;background:var(--bg);color:var(--text)}
+.art{background:linear-gradient(135deg,#ffe3e8,#dbe9ff);border-radius:32px;padding:20px;font-size:3rem;line-height:1.5;text-align:center}
+.art .eq{font-size:2.2rem;font-weight:600;background:#fff;color:#3b3355;border-radius:20px;padding:10px;margin:6px 0}
+.art i{display:inline-block;font-style:normal;animation:float 3s ease-in-out infinite}.art i:nth-child(2n){animation-delay:.6s}.art i:nth-child(3n){animation-delay:1.2s}
+@media(max-width:700px){.hero{grid-template-columns:1fr}.hero h1{font-size:2.2rem}}
+/* ===== DASHBOARD / PROGRESS ===== */
+.stats{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.stat{background:var(--bg);border-radius:20px;padding:10px 18px;font-size:1.2rem}.stat b{font-size:1.6rem;display:block}
+.bar{background:var(--line);border-radius:99px;height:22px;overflow:hidden;margin:6px 0}
+.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--green),var(--sun));transition:width .6s}
+.prow{text-align:left;margin:12px 0}
+/* ===== LESSON / QUESTIONS ===== */
+.big{font-size:4rem}.txt{font-size:1.5rem}
+.ex{font-size:2.6rem;background:var(--bg);border-radius:22px;padding:16px;margin:12px 0;line-height:1.5}
+.svg{width:110px;height:110px}
+.vis{font-size:2.6rem;min-height:90px;line-height:1.4}.vis .eq{font-size:2.4rem;font-weight:600}
+.choices{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.choice{min-width:110px;padding:14px 20px;font-size:1.6rem;font-weight:600;border-radius:20px;border:3px solid var(--blue);background:var(--card);color:var(--text);transition:transform .15s}
+.choice:hover:not(:disabled){background:var(--blue);color:#fff;transform:scale(1.07)}
+.choice.good{background:var(--green);border-color:var(--green);color:#1c4a26;animation:pop .5s}
+.choice.bad{border-color:var(--pink);opacity:.5}
+.msg{min-height:44px;font-size:1.6rem;font-weight:600;margin-top:10px}
+.qhead{display:flex;justify-content:space-between;align-items:center;font-weight:600}
+.item{border:3px dashed var(--line);background:var(--card);border-radius:16px;font-size:2.2rem;margin:4px;padding:4px 8px}.item.in{opacity:.25;transform:scale(.8)}
+.result .st{font-size:3rem}.result .st span{display:inline-block;animation:pop .6s both}
+/* ===== BADGES ===== */
+.badge{background:var(--card);border:3px solid var(--sun);border-radius:24px;padding:14px;text-align:center}
+.badge span{display:block;font-size:3rem}.badge.off{border-color:var(--line);filter:grayscale(1);opacity:.55}
+/* ===== TOAST / ANIMATIONS ===== */
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--lilac);color:#fff;border-radius:99px;padding:14px 26px;font-size:1.3rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.25);display:none;z-index:9;text-align:center}
+#toast.show{display:block;animation:pop .5s}
+@keyframes float{50%{transform:translateY(-10px)}}
+@keyframes pop{0%{transform:scale(.4)}70%{transform:scale(1.2)}100%{transform:scale(1)}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><b class="logo" data-a="go" data-v="home">🧮 MathAdventure</b><button id="menuBtn" data-a="menu" aria-label="Menu">☰</button></div>
+  <nav id="nav">
+    <button data-a="go" data-v="home">Home</button><button data-a="go" data-v="lessons">Lessons</button>
+    <button data-a="go" data-v="acts">Activities</button><button data-a="go" data-v="quizzes">Quiz</button>
+    <button data-a="go" data-v="rewards">Rewards</button><button data-a="go" data-v="progress">Progress</button>
+  </nav>
+</header>
+<main id="app"></main>
+<div id="toast"></div>
+
+<script>
+/* ============ 1. DATA: shapes, helpers, topics ============ */
+var EMOJI = ['🍎','⭐','🐶','🎈','🐟','🌼','✏️','🍪'];
+var COLORS = ['#ff8fa3','#4dabf7','#51cf66','#fcc419','#b197fc'];
+var SHAPES = {
+  Circle:'<circle cx="50" cy="50" r="42"/>', Square:'<rect x="10" y="10" width="80" height="80"/>',
+  Triangle:'<polygon points="50,8 94,90 6,90"/>', Rectangle:'<rect x="4" y="25" width="92" height="50"/>',
+  Star:'<polygon points="50,6 62,38 96,38 68,58 79,92 50,72 21,92 32,58 4,38 38,38"/>'
+};
+var DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+var $ = id => document.getElementById(id);
+var rnd = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
+var pick = a => a[rnd(0,a.length-1)];
+var shuffle = a => a.sort(() => Math.random()-.5);
+var rep = (e,n) => e.repeat(n);
+var esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+var shape = (n,c) => `<svg class="svg" viewBox="0 0 100 100" fill="${c}">${SHAPES[n]}</svg>`;
+function clock(h){ // analog clock showing h o'clock
+  var a=h*Math.PI/6, x=50+24*Math.sin(a), y=50-24*Math.cos(a);
+  return `<svg class="svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#fff" stroke="#ffa94d" stroke-width="5"/>
+  <g font-size="12" fill="#333" text-anchor="middle"><text x="50" y="20">12</text><text x="86" y="54">3</text><text x="50" y="92">6</text><text x="14" y="54">9</text></g>
+  <line x1="50" y1="50" x2="50" y2="16" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+  <line x1="50" y1="50" x2="${x}" y2="${y}" stroke="#f03e3e" stroke-width="6" stroke-linecap="round"/></svg>`;
+}
+// three answer choices around a number (returned as strings)
+function numChoices(ans, fmt){
+  fmt = fmt || (x => x); var s = {}; s[ans] = 1;
+  while(Object.keys(s).length < 3) s[Math.max(0, ans + rnd(-3,3))] = 1;
+  return shuffle(Object.keys(s).map(fmt));
+}
+function listChoices(list, ans){ return shuffle([ans].concat(shuffle(list.filter(x => x !== ans)).slice(0,2))); }
+
+// Each topic: lesson text + example. Add a new topic by adding an object here and a generator in GEN.
+var TOPICS = [
+ {id:'count',  icon:'🔢', name:'Counting Numbers', color:COLORS[0], text:'Point at each picture and count. The last number is the answer!', ex:'🍎🍎🍎🍎<br><b>1, 2, 3, 4 → 4 apples</b>'},
+ {id:'add',    icon:'➕', name:'Addition',         color:COLORS[1], text:'Adding means putting groups together.', ex:'🍎🍎 ➕ 🍎🍎🍎<br><b>2 + 3 = 5 apples</b>'},
+ {id:'sub',    icon:'➖', name:'Subtraction',      color:COLORS[2], text:'Subtracting means taking some away.', ex:'🍪🍪🍪🍪🍪 take away 2<br><b>5 − 2 = 3 cookies</b>'},
+ {id:'shapes', icon:'🔷', name:'Shapes',           color:COLORS[3], text:'Shapes are all around us. Look at their sides and corners!', ex:shape('Circle','#ff8fa3')+shape('Square','#4dabf7')+shape('Triangle','#51cf66')},
+ {id:'compare',icon:'📏', name:'Comparing Numbers',color:COLORS[4], text:'The bigger number has more things. The smaller number has fewer.', ex:'🍎🍎🍎🍎🍎🍎🍎 vs 🍎🍎<br><b>7 is bigger than 2</b>'},
+ {id:'time',   icon:'🕐', name:'Time',             color:COLORS[0], text:'The short hand tells the hour. At o\'clock, the long hand points up to 12.', ex:clock(3)+'<br><b>3 o\'clock</b>'},
+ {id:'money',  icon:'💰', name:'Money',            color:COLORS[1], text:'Coins help us buy things. Count them together!', ex:'🪙₱1 ➕ 🪙₱2<br><b>₱1 + ₱2 = ₱3</b>'},
+ {id:'days',   icon:'📅', name:'Days and Months',  color:COLORS[2], text:'A week has 7 days. A year has 12 months.', ex:'<b>Monday, Tuesday, Wednesday…</b><br>January ➡️ February ➡️ March'}
+];
+
+/* ============ 2. QUESTION GENERATORS ============ */
+// Each returns {vis: HTML shown to the child, ans: string, ch: [choices], say: hint text}
+var GEN = {
+  count(){ var n=rnd(1,10); return {vis:rep(pick(EMOJI),n), say:'How many do you see?', ans:''+n, ch:numChoices(n)}; },
+  add(){ var a=rnd(1,5), b=rnd(1,5), e=pick(EMOJI); return {vis:rep(e,a)+' ➕ '+rep(e,b)+`<div class="eq">${a} + ${b} = ?</div>`, say:'How many in all?', ans:''+(a+b), ch:numChoices(a+b)}; },
+  sub(){ var a=rnd(2,10), b=rnd(1,a-1), e=pick(EMOJI); return {vis:rep(e,a)+`<div class="eq">${a} − ${b} = ?</div>`, say:'How many are left?', ans:''+(a-b), ch:numChoices(a-b)}; },
+  shapes(){ var n=pick(Object.keys(SHAPES)); return {vis:shape(n,pick(COLORS)), say:'What shape is this?', ans:n, ch:listChoices(Object.keys(SHAPES),n)}; },
+  compare(){ var a=rnd(1,20), b; do b=rnd(1,20); while(b===a);
+    var big=Math.random()<.5; return {vis:`<div class="eq">${a} &nbsp;?&nbsp; ${b}</div>`, say:big?'Which number is BIGGER?':'Which number is SMALLER?', ans:''+(big?Math.max(a,b):Math.min(a,b)), ch:shuffle([''+a,''+b,'Same'])}; },
+  time(){ var h=rnd(1,12), f=x=>x+" o'clock"; return {vis:clock(h), say:'What time is it?', ans:f(h), ch:listChoices([1,2,3,4,5,6,7,8,9,10,11,12].map(f),f(h))}; },
+  money(){ var a=pick([1,2,5,10]), b=pick([1,2,5]), f=x=>'₱'+x; return {vis:`🪙${f(a)} ➕ 🪙${f(b)}<div class="eq">${f(a)} + ${f(b)} = ?</div>`, say:'How much money is this?', ans:f(a+b), ch:numChoices(a+b,f)}; },
+  days(){ if(Math.random()<.5){ var i=rnd(0,5); return {vis:`<div class="eq">${DAYS[i]} ➡️ ?</div>`, say:'Which day comes next?', ans:DAYS[i+1], ch:listChoices(DAYS,DAYS[i+1])}; }
+    var m=rnd(0,10); return {vis:`<div class="eq">${MONTHS[m]} ➡️ ?</div>`, say:'Which month comes next?', ans:MONTHS[m+1], ch:listChoices(MONTHS,MONTHS[m+1])}; }
+};
+
+/* ============ 3. GAME STATE (saved in localStorage) ============ */
+var KEY = 'mathadventure_v1';
+var S = load();
+function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || fresh(); }catch(e){ return fresh(); } }
+function fresh(){ return {name:'', points:0, stars:0, lesson:{}, quiz:{}, act:{}, badges:[]}; }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+
+var level = () => Math.floor(S.points/100)+1;
+var T = id => TOPICS.find(t => t.id === id);
+var idx = id => TOPICS.findIndex(t => t.id === id);
+// A topic is open when it is first, or the quiz of the previous topic was completed
+var isOpen = i => i === 0 || S.quiz[TOPICS[i-1].id] !== undefined;
+// Progress: lesson 30% + up to 5 correct activity answers 20% + quiz score 50%
+var pct = id => (S.lesson[id]?30:0) + Math.min(S.act[id]||0,5)*4 + (S.quiz[id]||0)*10;
+
+var BADGES = [
+ {icon:'🌟', name:'First Lesson',     ok:() => Object.keys(S.lesson).length > 0},
+ {icon:'🔢', name:'Number Explorer',  ok:() => S.quiz.count !== undefined},
+ {icon:'➕', name:'Addition Master',  ok:() => S.quiz.add >= 4},
+ {icon:'➖', name:'Subtraction Star', ok:() => S.quiz.sub >= 4},
+ {icon:'🔷', name:'Shape Detective',  ok:() => S.quiz.shapes >= 4},
+ {icon:'🏆', name:'Math Champion',    ok:() => TOPICS.every(t => S.quiz[t.id] !== undefined)}
+];
+function checkBadges(){
+  BADGES.forEach(b => { if(!S.badges.includes(b.name) && b.ok()){ S.badges.push(b.name); toast(`🏆 New badge: ${b.icon} ${b.name}!`); } });
+  save();
+}
+function addPoints(n){
+  var old = level(); S.points += n; save();
+  if(level() > old) toast(`🎉 Level Up! You are Level ${level()}!`);
+}
+var tt;
+function toast(m){ var t=$('toast'); t.textContent=m; t.className='show'; clearTimeout(tt); tt=setTimeout(()=>t.className='',2600); }
+
+/* ============ 4. PAGES ============ */
+var bar = p => `<div class="bar"><i style="width:${p}%"></i></div>`;
+function grid(action){
+  return '<div class="grid">' + TOPICS.map((t,i) => { var ok=isOpen(i);
+    return `<button class="tile" style="--c:${t.color}" ${ok?`data-a="${action}" data-v="${t.id}"`:'disabled'}><span>${ok?t.icon:'🔒'}</span>${t.name}<small>${ok?pct(t.id)+'% done':'Finish the last quiz to unlock'}</small></button>`; }).join('') + '</div>';
+}
+function show(p){
+  ({home, lessons, acts:()=>pickPage('✏️ Choose an Activity','begA'), quizzes:()=>pickPage('📝 Choose a Quiz','begQ'), rewards, progress})[p]();
+  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.v === p));
+  scrollTo(0,0);
+}
+function home(){
+  $('app').innerHTML = `<section class="card hero"><div><h1>MathAdventure</h1><p class="sub">Learn Math, Play, and Have Fun!</p>
+   <p>Learn with short lessons, fun activities, and games. Win stars and badges!</p>
+   <input id="nm" maxlength="12" placeholder="Type your name" aria-label="Your name"><button class="btn" data-a="start">Start Learning ▶</button></div>
+   <div class="art"><div class="eq">2 + 3 = 5</div><i>🐘</i><i>⭐</i><i>🍎</i><i>✏️</i><i>🔷</i><i>🔢</i><i>🎈</i></div></section>`;
+  $('nm').value = S.name;
+}
+function lessons(){
+  var p = S.points % 100, earned = BADGES.filter(b => S.badges.includes(b.name)).map(b => b.icon).join(' ');
+  $('app').innerHTML = `<div class="card"><h2>Hi, ${esc(S.name||'Friend')}! 👋</h2>
+   <div class="stats"><div class="stat">🎖️<b>Level ${level()}</b></div><div class="stat">💎<b>${S.points}</b>points</div><div class="stat">⭐<b>${S.stars}</b>stars</div></div>
+   <p>Next level: ${p} / 100</p>${bar(p)}<p>Badges: ${earned || 'Play to win badges!'}</p></div><h2>Pick a lesson</h2>` + grid('lesson');
+}
+function pickPage(title, action){ $('app').innerHTML = `<h2>${title}</h2>` + grid(action); }
+function lesson(id){
+  var t = T(id);
+  $('app').innerHTML = `<div class="card"><div class="big">${t.icon}</div><h2>${t.name}</h2><p class="txt">${t.text}</p><div class="ex">${t.ex}</div>
+   <div class="row"><button class="btn" data-a="try" data-v="${id}">Try It! ✏️</button><button class="btn alt" data-a="nextL" data-v="${id}">Next ▶</button></div></div>`;
+}
+function doneLesson(id){ if(!S.lesson[id]){ S.lesson[id]=1; addPoints(20); toast('📖 Lesson complete! +20 points'); checkBadges(); } }
+
+/* ---- Activities & quizzes share one engine: cur.mode = 'act' | 'quiz' ---- */
+var cur = {};
+function begin(id, mode){ cur = {id, mode, i:0, score:0}; nextQ(); }
+function nextQ(){
+  if(cur.mode === 'quiz' && cur.i >= 5) return endQuiz();
+  cur.done = false; cur.wrong = false;
+  if(cur.mode === 'act' && cur.id === 'count' && cur.i % 2 === 1) return basket();
+  cur.q = GEN[cur.id]();
+  var t = T(cur.id), label = cur.mode === 'quiz' ? `Question ${cur.i+1} of 5` : 'Practice';
+  $('app').innerHTML = `<div class="card"><div class="qhead"><button class="btn alt" data-a="go" data-v="lessons">🏠</button><span>${t.icon} ${t.name} · ${label}</span><span>💎 ${S.points}</span></div>
+   <p class="txt">${cur.q.say}</p><div class="vis">${cur.q.vis}</div>
+   <div class="choices">${cur.q.ch.map(c => `<button class="choice" data-a="ans" data-v="${esc(c)}">${esc(c)}</button>`).join('')}</div><div class="msg" id="msg"></div></div>`;
+}
+function correct(){ // shared "right answer" feedback
+  cur.done = true; $('msg').textContent = pick(['Great Job! ⭐','Awesome! 🌟','You did it! 🎉','Super! 👏']);
+  if(!cur.wrong){ cur.score++; addPoints(10); if(cur.mode === 'act') S.act[cur.id] = (S.act[cur.id]||0) + 1; save(); }
+  cur.i++; setTimeout(nextQ, 1400);
+}
+function answer(v, b){
+  if(cur.done) return;
+  if(v === cur.q.ans){ b.classList.add('good'); return correct(); }
+  b.classList.add('bad'); b.disabled = true; cur.wrong = true;
+  if(cur.mode === 'act'){ $('msg').textContent = 'Try Again! 😊'; return; }   // activities: try until right
+  cur.done = true; document.querySelectorAll('.choice').forEach(x => { if(x.dataset.v === cur.q.ans) x.classList.add('good'); }); // quiz: show the answer, move on
+  $('msg').textContent = 'Nice try! The answer is ' + cur.q.ans + ' 😊'; cur.i++; setTimeout(nextQ, 2000);
+}
+function basket(){ // tap-to-group activity (counting)
+  cur.n = rnd(1,8); var e = pick(EMOJI);
+  $('app').innerHTML = `<div class="card"><div class="qhead"><button class="btn alt" data-a="go" data-v="lessons">🏠</button><span>🔢 Fill the basket</span><span>💎 ${S.points}</span></div>
+   <p class="txt">Tap ${cur.n} ${e} to put in the basket!</p><div class="vis">${Array.from({length:10},(_,k)=>`<button class="item" data-a="put">${e}</button>`).join('')}</div>
+   <div class="txt">🧺 <b id="cnt">0</b></div><button class="btn" data-a="chk">Done ✔</button><div class="msg" id="msg"></div></div>`;
+}
+var A = {
+  go:v => { $('nav').classList.remove('open'); show(v); },
+  menu:() => $('nav').classList.toggle('open'),
+  start:() => { S.name = $('nm').value.trim() || 'Friend'; save(); show('lessons'); },
+  lesson, try:id => { doneLesson(id); begin(id,'act'); },
+  nextL:id => { doneLesson(id); var n = idx(id)+1; if(n < TOPICS.length && isOpen(n)) lesson(TOPICS[n].id); else { toast('Take the quiz to unlock the next topic! 🔓'); begin(id,'quiz'); } },
+  begA:id => begin(id,'act'), begQ:id => begin(id,'quiz'),
+  ans:answer,
+  put:(v,b) => { b.classList.toggle('in'); $('cnt').textContent = document.querySelectorAll('.item.in').length; },
+  chk:() => { if(cur.done) return; if(document.querySelectorAll('.item.in').length === cur.n) correct(); else { cur.wrong = true; $('msg').textContent = 'Try Again! 😊'; } },
+  again:() => begin(cur.id,'quiz'), cont:() => show('lessons')
+};
+document.addEventListener('click', e => { var b = e.target.closest('[data-a]'); if(b && !b.disabled) A[b.dataset.a](b.dataset.v, b); });
+
+function endQuiz(){
+  var first = S.quiz[cur.id] === undefined, perfect = cur.score === 5, bonusStars = perfect ? 3 : 0;
+  S.quiz[cur.id] = Math.max(S.quiz[cur.id]||0, cur.score); S.stars += cur.score + bonusStars;
+  var pts = cur.score*10 + (first ? 50 : 0); if(first) addPoints(50); save(); checkBadges();
+  var msg = perfect ? 'Perfect! You are a math star! 🌟' : cur.score >= 3 ? 'Great work! Keep going! 👏' : 'Good try! Practice and try again! 😊';
+  $('app').innerHTML = `<div class="card result"><h2>Quiz Finished!</h2><div class="st">${Array.from({length:5},(_,k)=>`<span style="animation-delay:${k*.15}s">${k<cur.score?'⭐':'☆'}</span>`).join('')}</div>
+   <p class="txt">Score: <b>${cur.score} / 5</b></p><p>⭐ Stars earned: <b>${cur.score + bonusStars}</b>${perfect?' (bonus!)':''} &nbsp; 💎 Points earned: <b>${pts}</b></p>
+   <p class="txt">${msg}</p><div class="row"><button class="btn alt" data-a="again">Try Again 🔁</button><button class="btn" data-a="cont">Continue Learning ▶</button></div></div>`;
+}
+function rewards(){
+  $('app').innerHTML = `<div class="card"><h2>🏆 My Rewards</h2><div class="stats"><div class="stat">💎<b>${S.points}</b>points</div><div class="stat">⭐<b>${S.stars}</b>stars</div><div class="stat">🎖️<b>Level ${level()}</b></div></div></div>
+   <div class="grid">${BADGES.map(b => `<div class="badge ${S.badges.includes(b.name)?'':'off'}"><span>${b.icon}</span>${b.name}</div>`).join('')}</div>`;
+}
+function progress(){
+  $('app').innerHTML = `<div class="card"><h2>📈 My Progress</h2>${TOPICS.map(t => `<div class="prow">${t.icon} <b>${t.name}</b> — ${pct(t.id)}%${bar(pct(t.id))}</div>`).join('')}</div>`;
+}
+show('home');
+</script>
+</body>
+</html>
